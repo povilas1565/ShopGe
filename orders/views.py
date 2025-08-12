@@ -5,7 +5,7 @@ from django.utils.timezone import now
 from django.db import transaction
 from .models import Order, OrderItem
 from cart.models import Cart
-from .serializers import OrderCreateSerializer, OrderSerializer
+from .serializers import OrderCreateSerializer, OrderSerializer, EmptySerializer
 from django.shortcuts import get_object_or_404
 import uuid
 
@@ -67,6 +67,7 @@ class OrderCreateAPIView(views.APIView):
 class OrderSetInProgressAPIView(views.APIView):
     """Перевести заказ в статус 'в работе'"""
     permission_classes = [AllowAny]
+    serializer_class = EmptySerializer
 
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
@@ -78,6 +79,7 @@ class OrderSetInProgressAPIView(views.APIView):
 class OrderSetPaidAPIView(views.APIView):
     """Отметить заказ как оплаченный"""
     permission_classes = [AllowAny]
+    serializer_class = EmptySerializer
 
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
@@ -90,6 +92,7 @@ class OrderSetPaidAPIView(views.APIView):
 class OrderCancelAPIView(views.APIView):
     """Отменить заказ"""
     permission_classes = [AllowAny]
+    serializer_class = EmptySerializer
 
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)

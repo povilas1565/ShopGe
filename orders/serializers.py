@@ -3,6 +3,12 @@ from abc import ABC
 from rest_framework import serializers
 from .models import Order, OrderItem
 
+from rest_framework import serializers
+
+
+class EmptySerializer(serializers.Serializer):
+    pass
+
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,4 +33,5 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'number', 'customer_name', 'phone', 'email', 'note', 'status', 'created_at', 'paid_at', 'subtotal', 'total', 'items']
+        fields = ['id', 'number', 'customer_name', 'phone', 'email', 'note', 'status', 'created_at', 'paid_at',
+                  'subtotal', 'total', 'items']
