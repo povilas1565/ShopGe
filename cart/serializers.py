@@ -16,14 +16,6 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ['id', 'product', 'product_id', 'qty', 'unit_price_snapshot']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        user = self.context['request'].user if 'request' in self.context else None
-        if user and hasattr(user, 'catalog_product_queryset'):
-            self.fields['product_id'].queryset = user.catalog_product_queryset
-        else:
-            self.fields['product_id'].queryset = Product.objects.none()
-
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True)

@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda request: redirect('swagger-ui', permanent=False)),  # 🚀 Редирект на Swagger
+
     path('admin/', admin.site.urls),
 
     # Подключаем API из приложений

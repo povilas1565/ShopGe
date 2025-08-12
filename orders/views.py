@@ -1,24 +1,28 @@
-from rest_framework import generics, status, views
+from rest_framework import status, views
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.utils.timezone import now
 from django.db import transaction
 from .models import Order, OrderItem
-from cart.models import Cart, CartItem
+from cart.models import Cart
 from .serializers import OrderCreateSerializer, OrderSerializer
 from django.shortcuts import get_object_or_404
+import uuid
 
 
 def generate_order_number():
-    import uuid
     return uuid.uuid4().hex[:12].upper()
 
 
 class OrderCreateAPIView(views.APIView):
+    """Создание нового заказа"""
+    permission_classes = [AllowAny]
+    serializer_class = OrderCreateSerializer
+
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Получаем корзину
         if request.user.is_authenticated:
             cart = Cart.objects.filter(user=request.user).first()
         else:
@@ -42,7 +46,7 @@ class OrderCreateAPIView(views.APIView):
                 note=data.get('comment'),
                 status='new',
             )
-            subtotal = 0
+            subtotal = sum(item.unit_price_snapshot * item.qty for item in cart.items.all())
             for item in cart.items.all():
                 OrderItem.objects.create(
                     order=order,
@@ -51,21 +55,19 @@ class OrderCreateAPIView(views.APIView):
                     qty=item.qty,
                     unit_price_snapshot=item.unit_price_snapshot,
                 )
-                subtotal += item.unit_price_snapshot * item.qty
 
             order.subtotal = subtotal
-            order.total = subtotal  # можно потом добавить скидки/налоги
+            order.total = subtotal
             order.save()
-
-            # Можно почистить корзину:
             cart.items.all().delete()
 
         return Response({"order_number": order.number, "status": order.status}, status=status.HTTP_201_CREATED)
 
 
-# Админ-действия на заказах
-
 class OrderSetInProgressAPIView(views.APIView):
+    """Перевести заказ в статус 'в работе'"""
+    permission_classes = [AllowAny]
+
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
         order.status = 'in_progress'
@@ -74,6 +76,9 @@ class OrderSetInProgressAPIView(views.APIView):
 
 
 class OrderSetPaidAPIView(views.APIView):
+    """Отметить заказ как оплаченный"""
+    permission_classes = [AllowAny]
+
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
         order.status = 'paid'
@@ -83,6 +88,9 @@ class OrderSetPaidAPIView(views.APIView):
 
 
 class OrderCancelAPIView(views.APIView):
+    """Отменить заказ"""
+    permission_classes = [AllowAny]
+
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
         order.status = 'cancelled'
