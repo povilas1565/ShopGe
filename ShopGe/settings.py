@@ -8,7 +8,7 @@ SECRET_KEY = [host.strip() for host in os.getenv("DJANGO_SECRET_KEY", "django-in
 
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
-allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,94.228.123.108")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",")]
 
 
