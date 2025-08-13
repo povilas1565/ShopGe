@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.utils.translation import get_language
-from modeltranslation.admin import TranslationAdmin
+from django.utils.translation import gettext_lazy as _
 from .models import Category, Product, ProductImage
-from . import translation
 
 
 class ProductImageInline(admin.TabularInline):
@@ -11,15 +9,19 @@ class ProductImageInline(admin.TabularInline):
 
 
 @admin.register(Category)
-class CategoryAdmin(TranslationAdmin):  # TranslationAdmin берёт переводы автоматически
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug']
     prepopulated_fields = {'slug': ('title',)}
+    verbose_name = _("Категория")
+    verbose_name_plural = _("Категории")
 
 
 @admin.register(Product)
-class ProductAdmin(TranslationAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'price', 'in_stock', 'is_active']
     list_filter = ['is_active', 'category']
     search_fields = ['title', 'description']
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ProductImageInline]
+    verbose_name = _("Товар")
+    verbose_name_plural = _("Товары")

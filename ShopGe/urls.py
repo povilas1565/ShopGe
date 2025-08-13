@@ -4,9 +4,16 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django.conf.urls.i18n import i18n_patterns
 from django.shortcuts import redirect
 
+
+def root_redirect(request):
+    # Редиректим только если нет языкового префикса
+    if request.path.strip('/') == '':
+        return redirect('/api/docs/', permanent=False)
+    return redirect(request.path)
+
+
 urlpatterns = [
-    # Swagger по умолчанию на корне
-    path('', lambda request: redirect('/api/docs/', permanent=False)),
+    path('', lambda request: redirect('/api/docs/', permanent=False)),  # Swagger только на чистом "/"
 
     path('i18n/', include('django.conf.urls.i18n')),  # Переключение языка
 
@@ -21,8 +28,7 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
 
-# Оборачиваем админку в i18n_patterns, чтобы у неё был префикс языка
+# Админка и другие маршруты с поддержкой языка
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
 )
-
