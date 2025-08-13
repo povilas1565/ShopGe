@@ -85,11 +85,6 @@ TEMPLATES = [
     },
 ]
 
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]
-
-
 WSGI_APPLICATION = 'ShopGe.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
