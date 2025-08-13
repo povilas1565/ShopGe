@@ -14,6 +14,15 @@ ALLOWED_HOSTS = allowed_hosts_env.split()
 
 CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108', 'http://localhost', 'http://127.0.0.1']
 
+#За прокси
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = False  # или True если HTTPS
+CSRF_COOKIE_SECURE = False     # или True если HTTPS
+
 
 # Database settings из env
 DATABASES = {
@@ -103,16 +112,6 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 USE_TZ = True
-
-#За прокси
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
-
-SESSION_COOKIE_SAMESITE = None
-CSRF_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False  # или True если HTTPS
-CSRF_COOKIE_SECURE = False     # или True если HTTPS
-
 
 STATIC_URL = 'static/'
 

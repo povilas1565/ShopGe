@@ -24,7 +24,7 @@ services:
       "
     volumes:
       - .:/app
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
     expose:
       - "8082"
     env_file:
@@ -36,7 +36,7 @@ services:
     image: nginx:latest
     container_name: shopge_nginx
     ports:
-      - "80:80"
+      - "82:82"
     depends_on:
       - web
     volumes:
