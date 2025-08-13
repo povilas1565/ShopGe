@@ -18,4 +18,3 @@ class ProductRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.filter(is_active=True)
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
-

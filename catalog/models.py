@@ -74,3 +74,22 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="images",
+        on_delete=models.CASCADE,
+        verbose_name=_("Товар")
+    )
+    image = models.ImageField(
+        upload_to="products/",
+        verbose_name=_("Изображение")
+    )
+
+    class Meta:
+        verbose_name = _("Изображение товара")
+        verbose_name_plural = _("Изображения товара")
+
+    def __str__(self):
+        return f"{self.product.title} - {self.image.name}"
