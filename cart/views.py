@@ -21,17 +21,6 @@ def get_cart(request):
     return cart
 
 
-class CartAPIView(APIView):
-    """Получить содержимое корзины"""
-    permission_classes = [AllowAny]
-    serializer_class = CartSerializer
-
-    def get(self, request):
-        cart = get_cart(request)
-        serializer = CartSerializer(cart)
-        return Response(serializer.data)
-
-
 class CartItemCreateAPIView(APIView):
     """Добавить товар в корзину"""
     permission_classes = [AllowAny]

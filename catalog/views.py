@@ -14,7 +14,7 @@ class ProductListAPIView(generics.ListAPIView):
 
 
 class ProductRetrieveAPIView(generics.RetrieveAPIView):
-    """Детальная информация о товаре"""
-    queryset = Product.objects.filter(is_active=True)
+    queryset = Product.objects.all()  # без фильтра is_active
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
+
