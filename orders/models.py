@@ -11,18 +11,63 @@ class Order(models.Model):
         ('cancelled', _("Отменён")),
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    number = models.CharField(max_length=20, unique=True)
-    customer_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=50)
-    email = models.EmailField(blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
-    created_at = models.DateTimeField(auto_now_add=True)
-    paid_at = models.DateTimeField(blank=True, null=True)
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+        verbose_name=_("ID заказа")
+    )
+    number = models.CharField(
+        max_length=20,
+        unique=True,
+        verbose_name=_("Номер заказа")
+    )
+    customer_name = models.CharField(
+        max_length=255,
+        verbose_name=_("Имя клиента")
+    )
+    phone = models.CharField(
+        max_length=50,
+        verbose_name=_("Телефон")
+    )
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name=_("Email")
+    )
+    note = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Примечание")
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='new',
+        verbose_name=_("Статус заказа")
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Дата создания")
+    )
+    paid_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name=_("Дата оплаты")
+    )
 
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    subtotal = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Сумма заказа")
+    )
+    total = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Итоговая сумма")
+    )
 
     class Meta:
         verbose_name = _("Заказ")
@@ -33,12 +78,20 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product_id = models.IntegerField()
-    title_snapshot = models.CharField(max_length=255)
-    qty = models.PositiveIntegerField()
-    unit_price_snapshot = models.DecimalField(max_digits=10, decimal_places=2)
+    order = models.ForeignKey(
+        Order,
+        related_name='items',
+        on_delete=models.CASCADE,
+        verbose_name=_("Заказ")
+    )
+    product_id = models.IntegerField(verbose_name=_("ID продукта"))
+    title_snapshot = models.CharField(max_length=255, verbose_name=_("Название продукта"))
+    qty = models.PositiveIntegerField(verbose_name=_("Количество"))
+    unit_price_snapshot = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Цена за единицу"))
 
     class Meta:
         verbose_name = _("Элемент заказа")
         verbose_name_plural = _("Элементы заказа")
+
+    def __str__(self):
+        return f"{self.title_snapshot} ({self.qty})"
