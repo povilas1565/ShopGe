@@ -4,15 +4,15 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Секретный ключ и Debug из переменных окружения с дефолтами
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-6h9%px7bebu)^=b8%z28)d)ebr9k6i4l(2-3e$_wc7sw4=-lnx")
+SECRET_KEY = [host.strip() for host in os.getenv("DJANGO_SECRET_KEY", "django-insecure-6h9%px7bebu)^=b8%z28)d)ebr9k6i4l(2-3e$_wc7sw4=-lnx")]
 
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
 # ALLOWED_HOSTS из env (строка с пробелами) -> список
-allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost, 127.0.0.1, 94.228.123.108")
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,94.228.123.108").split(",")
 ALLOWED_HOSTS = allowed_hosts_env.split()
 
-CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108:8082', 'http://localhost', 'http://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108', 'http://localhost', 'http://127.0.0.1']
 
 
 # Database settings из env
@@ -103,6 +103,10 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 USE_TZ = True
+
+#За прокси
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 
 SESSION_COOKIE_SAMESITE = None
 CSRF_COOKIE_SAMESITE = None
