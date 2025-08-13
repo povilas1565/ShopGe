@@ -12,7 +12,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost, 127.0.0.1, 94.228.123.108")
 ALLOWED_HOSTS = allowed_hosts_env.split()
 
-CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108', 'http://localhost', 'http://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108:8082', 'http://localhost', 'http://127.0.0.1']
 
 
 # Database settings из env
