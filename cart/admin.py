@@ -1,6 +1,7 @@
 from modeltranslation.admin import TranslationTabularInline, TranslationAdmin
 from .models import Cart, CartItem
 from django.contrib import admin
+from . import translation
 
 
 class CartItemInline(admin.TabularInline):

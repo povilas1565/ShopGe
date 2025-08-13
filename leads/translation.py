@@ -1,9 +1,7 @@
-from modeltranslation.translator import translator, TranslationOptions
+from modeltranslation.translator import register, TranslationOptions
 from .models import Lead
 
 
+@register(Lead)
 class LeadTranslationOptions(TranslationOptions):
-    fields = ('name', 'message')
-
-
-translator.register(Lead, LeadTranslationOptions)
+    fields = ('name', 'message',)

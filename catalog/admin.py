@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.utils.translation import get_language
 from modeltranslation.admin import TranslationAdmin
-from .models import Product, ProductImage, Category
+from .models import Category, Product, ProductImage
 from . import translation
 
 
@@ -10,13 +11,13 @@ class ProductImageInline(admin.TabularInline):
 
 
 @admin.register(Category)
-class CategoryAdmin(TranslationAdmin):  # вместо ModelAdmin
+class CategoryAdmin(TranslationAdmin):  # TranslationAdmin берёт переводы автоматически
     list_display = ['title', 'slug']
     prepopulated_fields = {'slug': ('title',)}
 
 
 @admin.register(Product)
-class ProductAdmin(TranslationAdmin):  # вместо ModelAdmin
+class ProductAdmin(TranslationAdmin):
     list_display = ['title', 'price', 'in_stock', 'is_active']
     list_filter = ['is_active', 'category']
     search_fields = ['title', 'description']

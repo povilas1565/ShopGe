@@ -1,9 +1,7 @@
-from modeltranslation.translator import translator, TranslationOptions
+from modeltranslation.translator import register, TranslationOptions
 from .models import OrderItem
 
 
+@register(OrderItem)
 class OrderItemTranslationOptions(TranslationOptions):
     fields = ('title_snapshot',)
-
-
-translator.register(OrderItem, OrderItemTranslationOptions)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationTabularInline
-
 from .models import Order, OrderItem
+from django.utils.translation import get_language
 from django.utils.timezone import now
 from django.http import HttpResponse
 import csv
@@ -32,6 +32,7 @@ def set_cancelled(request, queryset):
 
 @admin.action(description="Экспортировать выбранные заказы в CSV")
 def export_orders_csv(request, queryset):
+    current_lang = get_language()
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
     writer = csv.writer(response)
@@ -39,7 +40,7 @@ def export_orders_csv(request, queryset):
     for order in queryset:
         writer.writerow([
             order.number,
-            order.customer_name,
+            getattr(order, f"customer_name_{current_lang}", order.customer_name),
             order.phone,
             order.email or '',
             order.status,
@@ -53,7 +54,6 @@ def export_orders_csv(request, queryset):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['number', 'customer_name', 'phone', 'status', 'created_at', 'paid_at', 'total']
-    list_filter = ['status', 'created_at']
-    search_fields = ['number', 'customer_name', 'phone', 'email']
+    list_filter = ['status', 'created_at', 'paid_at']
     inlines = [OrderItemInline]
     actions = [set_in_progress, set_paid, set_cancelled, export_orders_csv]

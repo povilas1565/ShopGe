@@ -1,8 +1,8 @@
+from django.utils.translation import get_language
 from django.contrib import admin
-from modeltranslation.admin import TranslationAdmin
 from .models import Lead
-from django.http import HttpResponse
 import csv
+from django.http import HttpResponse
 from . import translation
 
 
@@ -13,23 +13,26 @@ def mark_processed(request, queryset):
 
 @admin.action(description="Экспортировать выбранные лиды в CSV")
 def export_leads_csv(modeladmin, request, queryset):
+    current_lang = get_language()  # получаем текущий язык админки
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="leads.csv"'
     writer = csv.writer(response)
     writer.writerow(['Имя', 'Телефон', 'Источник', 'Сообщение', 'Дата'])
     for lead in queryset:
+        # берём поле message на текущем языке
+        message_field = f"message_{current_lang}" if current_lang != 'default' else "message"
         writer.writerow([
-            lead.name,
+            getattr(lead, f"name_{current_lang}", lead.name),
             lead.phone,
             lead.source,
-            lead.message or '',
+            getattr(lead, message_field, lead.message) or '',
             lead.created_at,
         ])
     return response
 
 
 @admin.register(Lead)
-class LeadAdmin(TranslationAdmin):
+class LeadAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone', 'source', 'created_at', 'processed']
     list_filter = ['processed', 'source', 'created_at']
     search_fields = ['name', 'phone', 'message']

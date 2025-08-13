@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,7 +23,6 @@ SESSION_COOKIE_SAMESITE = None
 CSRF_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = False  # или True если HTTPS
 CSRF_COOKIE_SECURE = False     # или True если HTTPS
-
 
 # Database settings из env
 DATABASES = {
@@ -107,14 +107,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGES = (
-    ('ru', 'Russian'),
-    ('en', 'English'),
-    ('ka', 'Georgian'),
-)
+LANGUAGE_CODE = 'ru'
 
-MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+LANGUAGES = [
+    ('ru', _('Русский')),
+    ('en', _('English')),
+    ('ka', _('ქართული')),
+]
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',  # где будут храниться переводы интерфейса
+]
 
 TIME_ZONE = 'UTC'
 
