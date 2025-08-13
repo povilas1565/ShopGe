@@ -1,5 +1,6 @@
-from django.contrib import admin
+from modeltranslation.admin import TranslationTabularInline, TranslationAdmin
 from .models import Cart, CartItem
+from django.contrib import admin
 
 
 class CartItemInline(admin.TabularInline):

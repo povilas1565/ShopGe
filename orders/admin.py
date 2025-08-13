@@ -1,11 +1,14 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationTabularInline
+
 from .models import Order, OrderItem
 from django.utils.timezone import now
 from django.http import HttpResponse
 import csv
+from . import translation
 
 
-class OrderItemInline(admin.TabularInline):
+class OrderItemInline(TranslationTabularInline):
     model = OrderItem
     readonly_fields = ['product_id', 'title_snapshot', 'qty', 'unit_price_snapshot']
     extra = 0
@@ -43,7 +46,7 @@ def export_orders_csv(request, queryset):
             order.created_at,
             order.paid_at or '',
             order.total,
-            ])
+        ])
     return response
 
 
@@ -54,4 +57,3 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['number', 'customer_name', 'phone', 'email']
     inlines = [OrderItemInline]
     actions = [set_in_progress, set_paid, set_cancelled, export_orders_csv]
-

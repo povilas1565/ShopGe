@@ -1,7 +1,9 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 from .models import Lead
 from django.http import HttpResponse
 import csv
+from . import translation
 
 
 @admin.action(description="Отметить как обработанные")
@@ -22,12 +24,12 @@ def export_leads_csv(modeladmin, request, queryset):
             lead.source,
             lead.message or '',
             lead.created_at,
-            ])
+        ])
     return response
 
 
 @admin.register(Lead)
-class LeadAdmin(admin.ModelAdmin):
+class LeadAdmin(TranslationAdmin):
     list_display = ['name', 'phone', 'source', 'created_at', 'processed']
     list_filter = ['processed', 'source', 'created_at']
     search_fields = ['name', 'phone', 'message']

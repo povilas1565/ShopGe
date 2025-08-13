@@ -44,14 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'modeltranslation',
     'rest_framework',
     'drf_spectacular',
     'corsheaders',
     'django_filters',
-    'catalog',
-    'cart',
-    'orders',
-    'leads',
+    'catalog.apps.CatalogConfig',
+    'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
+    'leads.apps.LeadsConfig',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,11 @@ TEMPLATES = [
     },
 ]
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+
 WSGI_APPLICATION = 'ShopGe.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -101,12 +107,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'ru'
-
-LANGUAGES = [
+LANGUAGES = (
     ('ru', 'Russian'),
-    ('ka', 'Georgian')
-]
+    ('en', 'English'),
+    ('ka', 'Georgian'),
+)
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+
 
 TIME_ZONE = 'UTC'
 
