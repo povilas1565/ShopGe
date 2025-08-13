@@ -10,7 +10,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
 # ALLOWED_HOSTS из env (строка с пробелами) -> список
 allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,94.228.123.108")
-ALLOWED_HOSTS = allowed_hosts_env.split(",")
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",")]
 
 CSRF_TRUSTED_ORIGINS = ['http://94.228.123.108:8082', 'http://localhost', 'http://127.0.0.1']
 
